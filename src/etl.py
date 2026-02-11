@@ -1,10 +1,12 @@
 import pandas as pd
 import os
 import numpy as np
+import pathlib
 
-# Configuration
-RAW_DATA_PATH = 'data/raw/Sample - Superstore.csv'
-PROCESSED_DATA_PATH = 'data/processed/superstore_clean.csv'
+# Configuration - Robust Path Handling
+BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
+RAW_DATA_PATH = BASE_DIR / 'data' / 'raw' / 'Sample - Superstore.csv'
+PROCESSED_DATA_PATH = BASE_DIR / 'data' / 'processed' / 'superstore_clean.csv'
 
 def load_data(filepath):
     """Load data from CSV file."""
@@ -40,14 +42,17 @@ def clean_data(df):
         print(f"Removing {duplicates} duplicate rows.")
         df = df.drop_duplicates()
 
-    # 4 Handle nulls
+    # 4. Handle nulls
     nulls = df.isnull().sum()
     null_cols = nulls[nulls > 0]
     if len(null_cols) > 0:
         print(f"Null values found:\n{null_cols}")
-        # Postal Code: fill with '00000'
-        if 'postal_code' in df.columns:
-            df['postal_code'] = df['postal_code'].fillna('00000')
+    else:
+        print("No null values found.")
+    
+    # 4.1 Convert postal_code to string (zip codes are not numeric values)
+    if 'postal_code' in df.columns:
+        df['postal_code'] = df['postal_code'].astype(int).astype(str)
         
     # 5. Calculated fields
     if 'sales' in df.columns and 'profit' in df.columns:

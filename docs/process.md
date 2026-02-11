@@ -19,14 +19,52 @@
 
 
 ## 2. Limpieza y transformación de datos (ETL)
-- Script: [src/etl.py](src/etl.py)
-- Entrada: [data/raw/Sample - Superstore.csv](data/raw/Sample%20-%20Superstore.csv) (encoding Windows-1252)
-- Salida: [data/processed/superstore_clean.csv](data/processed/superstore_clean.csv)
+- Script: [src/etl.py](../src/etl.py)
+- Entrada: [data/raw/Sample - Superstore.csv](../data/raw/Sample%20-%20Superstore.csv) (encoding Windows-1252)
+- Salida: [data/processed/superstore_clean.csv](../data/processed/superstore_clean.csv)
 - Transformaciones realizadas:
     1. Estandarización de nombres de columnas a snake_case.
     2. Conversión de Order Date y Ship Date a formato datetime (de MM/DD/YYYY).
     3. Detección y eliminación de duplicados: 0 encontrados.
-    4. Manejo de valores nulos: Postal Code (11 nulls en Burlington, VT) rellenados con '00000'.
-    5. Campo calculado: profit_margin = profit / sales (con protección contra división por cero).
-    6. Campos de time intelligence: order_year, order_month, order_quarter.
-- Resultado: 9,994 filas × 24 columnas (3 columnas nuevas agregadas).
+    4. Manejo de valores nulos: 0 valores nulos encontrados en el dataset.
+    5. Conversión de `postal_code` a tipo texto (los códigos postales no son valores numéricos).
+    6. Campo calculado: profit_margin = profit / sales (con protección contra división por cero).
+    7. Campos de time intelligence: order_year, order_month, order_quarter.
+- Resultado: 9,994 filas × 25 columnas (4 columnas nuevas agregadas).
+
+## 3. Carga a Base de Datos
+- Script: [src/load_db.py](../src/load_db.py)
+- Entrada: [data/processed/superstore_clean.csv](../data/processed/superstore_clean.csv), [sql/schema.sql](../sql/schema.sql)
+- Salida: Base de datos SQLite [data/superstore.db](../data/superstore.db)
+- Proceso:
+    1. Conexión a base de datos SQLite.
+    2. Ejecución de schema SQL (creación de tabla `orders` y vistas).
+    3. Limpieza de tabla `orders` (DELETE) para evitar duplicados.
+    4. Carga de datos desde CSV procesado.
+- Verificación: 9,994 filas insertadas en tabla `orders`.
+
+### Decisiones técnicas
+
+#### ¿Por qué SQLite y no solo CSV?
+Para este proyecto, decidí implementar una base de datos SQLite intermedia (`data/superstore.db`) en lugar de conectar Power BI directamente al CSV por las siguientes razones de arquitectura de datos:
+
+1.  **Integridad de Datos (Type Safety)**:
+    - El CSV no fuerza tipos de datos. Una columna de fechas podría contener texto corrupto.
+    - SQLite, a través de `sql/schema.sql`, define tipos explícitos (`REAL` para ventas, `DATE` para fechas). Si bien SQLite es flexible, esta capa actúa como un contrato de calidad.
+
+2.  **Centralización de la Lógica (Business Logic in Views)**:
+    - He creado vistas SQL (`v_sales_by_month`, `v_top_products`) en `sql/schema.sql`.
+    - Esto permite que la lógica de negocio (ej. "cómo se define el top de productos") viva en el código SQL y no dispersa en fórmulas de Power BI o Excel.
+
+3.  **Performance (Indexación)**:
+    - Aunque con ~10k filas no es crítico, SQL permite indexar columnas (ej. `Order Date`) para consultas instantáneas, algo imposible en archivos planos (CSV) que requieren lectura secuencial completa.
+
+#### ¿Por qué tabla plana (desnormalizada)?
+El dataset se carga en una única tabla `orders` en lugar de normalizarlo en tablas separadas (customers, products, locations). Esto se justifica por:
+- **Simplicidad**: El foco del proyecto es el análisis, no el modelado relacional.
+- **Dataset pequeño**: Con ~10k filas, no hay beneficio de performance en normalizar.
+- **Compatibilidad con Power BI**: Un modelo de tabla única simplifica la conexión y las medidas DAX.
+
+#### Rol de los archivos
+- **`sql/schema.sql` (Blueprint)**: Es el código fuente de la infraestructura. Define la estructura de las tablas y las vistas. Permite reproducir la base de datos desde cero si se borra el archivo `.db`.
+- **`data/superstore.db` (Storage)**: Es el archivo binario donde residen los datos. Power BI o cualquier herramienta de análisis se conecta aquí para leer los datos ya limpios y estructurados.
