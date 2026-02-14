@@ -38,6 +38,13 @@ ENV/
 *.pbix
 *.pbit
 
+# Data (generated)
+*.db
+data/processed/
+
+# Auxiliary scripts
+notebooks/create_eda_notebook.py
+
 # OS
 .DS_Store
 Thumbs.db

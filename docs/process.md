@@ -68,3 +68,41 @@ El dataset se carga en una única tabla `orders` en lugar de normalizarlo en tab
 #### Rol de los archivos
 - **`sql/schema.sql` (Blueprint)**: Es el código fuente de la infraestructura. Define la estructura de las tablas y las vistas. Permite reproducir la base de datos desde cero si se borra el archivo `.db`.
 - **`data/superstore.db` (Storage)**: Es el archivo binario donde residen los datos. Power BI o cualquier herramienta de análisis se conecta aquí para leer los datos ya limpios y estructurados.
+
+## 4. Análisis Exploratorio de Datos (EDA)
+- Notebook: [notebooks/01_eda.ipynb](../notebooks/01_eda.ipynb)
+- Generado programáticamente con `nbformat` para reproducibilidad.
+- Entrada: [data/processed/superstore_clean.csv](../data/processed/superstore_clean.csv)
+
+### Secciones del análisis
+
+1. **Carga y Validación de Datos**
+    - Revalidación defensiva del dataset procesado (nulls, duplicados, totales de control).
+    - Verificación de cardinalidad: 5,009 órdenes únicas, 793 clientes, 1,862 productos.
+    - Totales de control: Ventas $2,297,200.86 — Profit $286,397.02.
+
+2. **Evolución Temporal**
+    - Ventas y profit por año, tendencia mensual, estacionalidad.
+    - Análisis de divergencia ventas-profit: se identificó el *product mix effect* (ej. 2015: ventas -2.8% pero profit +24.4% por mejora en márgenes de Technology).
+    - Estacionalidad: noviembre y diciembre concentran los picos de ventas.
+
+3. **Rentabilidad por Categoría y Región**
+    - Barras horizontales de profit por sub-categoría (verde/rojo).
+    - Heatmaps: profit absoluto y margen por región × categoría.
+    - Análisis por segmento de cliente (Consumer, Corporate, Home Office).
+
+4. **Impacto de Descuentos**
+    - Tabla cuantitativa de métricas por rango de descuento.
+    - Gráfico de punto de quiebre: identificación del umbral donde el profit promedio se vuelve negativo.
+
+5. **Top/Bottom Productos**
+    - 10 productos más y menos rentables (drill-down a nivel micro).
+
+6. **Conclusiones y Recomendaciones**
+    - Plantilla de hallazgos estructurada: Hallazgo → Evidencia → Recomendación.
+
+### Decisiones técnicas del EDA
+
+- Se omitió el scatter plot de descuento vs profit por complejidad visual excesiva; se mantuvo solo la tabla y el gráfico de punto de quiebre por claridad.
+- Se agregó análisis de product mix effect (margen por categoría por año) para explicar divergencias entre ventas y profit.
+- El notebook se genera con un script Python (`create_eda_notebook.py`) para permitir modificaciones programáticas sin editar JSON manualmente.

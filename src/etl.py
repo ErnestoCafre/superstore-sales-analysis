@@ -1,5 +1,4 @@
 import pandas as pd
-import os
 import numpy as np
 import pathlib
 
@@ -73,7 +72,7 @@ def save_data(df, filepath):
         return
     
     print(f"Saving processed data to {filepath}...")
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    pathlib.Path(filepath).parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(filepath, index=False)
     print("Data saved successfully.")
 
