@@ -13,7 +13,7 @@
     - 4 regiones (Central, East, South, West).
     - Profit puede ser negativo (pérdidas reales en algunas ventas).
     - Categorías principales: Technology, Furniture, Office Supplies.
-    - Cantidad de órdenas únicas sobre order id: 5009
+    - Cantidad de órdenes únicas sobre order id: 5009
 
 - Total aproximado: Ventas $2,297,200.86 Profit $286,679.34 (calculado rápido en Excel).
 

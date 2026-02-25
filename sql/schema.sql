@@ -1,5 +1,5 @@
 -- Schema for Superstore Data Analysis
--- Dialect: SQLite / PostgreSQL compatible
+-- Dialect: SQLite
 
 CREATE TABLE IF NOT EXISTS orders (
     row_id INTEGER PRIMARY KEY,

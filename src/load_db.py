@@ -17,7 +17,7 @@ def load_to_db():
         return
 
     try:
-        df = pd.read_csv(CSV_PATH)
+        df = pd.read_csv(CSV_PATH, dtype={'postal_code': str})
         print(f"Read {len(df)} rows from CSV.")
     except Exception as e:
         print(f"Error reading CSV: {e}")

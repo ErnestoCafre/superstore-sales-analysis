@@ -49,9 +49,9 @@ def clean_data(df):
     else:
         print("No null values found.")
     
-    # 4.1 Convert postal_code to string (zip codes are not numeric values)
+    # 4.1 Convert postal_code to string with zero-padding (US zip codes = 5 digits)
     if 'postal_code' in df.columns:
-        df['postal_code'] = df['postal_code'].astype(int).astype(str)
+        df['postal_code'] = df['postal_code'].astype(int).astype(str).str.zfill(5)
         
     # 5. Calculated fields
     if 'sales' in df.columns and 'profit' in df.columns:
