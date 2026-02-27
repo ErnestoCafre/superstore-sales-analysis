@@ -106,3 +106,31 @@ El dataset se carga en una única tabla `orders` en lugar de normalizarlo en tab
 - Se omitió el scatter plot de descuento vs profit por complejidad visual excesiva; se mantuvo solo la tabla y el gráfico de punto de quiebre por claridad.
 - Se agregó análisis de product mix effect (margen por categoría por año) para explicar divergencias entre ventas y profit.
 - El notebook se genera con un script Python (`create_eda_notebook.py`) para permitir modificaciones programáticas sin editar JSON manualmente.
+
+## 5. Dashboard en Power BI
+- Archivo: `superstore.pbix`
+- Fuente de datos: [data/processed/superstore_clean.csv](../data/processed/superstore_clean.csv)
+
+### Conexión de datos
+- Fuente: CSV.
+- Locale de importación: English (United States) — necesario porque el CSV usa punto como separador decimal y el sistema local usa coma.
+- Tabla Calendar creada con DAX (`CALENDARAUTO`) para funciones de Time Intelligence.
+- Relación: `Calendar[Date]` → `superstore_clean[order_date]` (One-to-Many).
+
+### Medidas DAX
+Se crearon medidas explícitas para reemplazar las métricas implícitas de Power BI:
+- `Total Sales`, `Total Profit`, `Profit Margin`, `Total Orders`
+- `Avg Discount`, `Loss Rate`, `Discounted Transactions`
+- `Profit Color` — medida auxiliar que devuelve hex verde/rojo según el signo del profit, usada como alternativa al formato condicional por Rules.
+- `Discount Range` + `Discount Sort` — columnas calculadas para agrupar y ordenar rangos de descuento.
+
+### Páginas del dashboard
+1. **Sales Overview**: KPI cards (ventas, profit, margen, órdenes), barras de ventas/profit por año, donut por categoría, barras por región, slicers interactivos.
+2. **Category & Region Profitability**: barras horizontales de profit por sub-categoría (verde/rojo), matrix heatmap región × categoría con gradiente, barras de segmento de cliente.
+3. **Discount Impact Analysis**: cards de descuento/loss rate, gráfico de punto de quiebre (avg profit por rango de descuento), tabla de métricas por rango, loss rate por sub-categoría.
+
+### Decisiones técnicas del dashboard
+- Se usó CSV como fuente (en vez de SQLite) por simplicidad.
+- Se crearon medidas DAX explícitas en vez de implícitas para garantizar recálculo correcto con filtros.
+- Paleta de colores unificada: azul `#41A9FF` (ventas/neutro), verde `#51FF77` (profit/positivo), rojo `#FF4545` (pérdidas/negativo), gris `#E8EDF2` (fondo).
+
