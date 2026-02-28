@@ -101,14 +101,9 @@ El dataset se carga en una única tabla `orders` en lugar de normalizarlo en tab
 6. **Conclusiones y Recomendaciones**
     - Plantilla de hallazgos estructurada: Hallazgo → Evidencia → Recomendación.
 
-### Decisiones técnicas del EDA
-
-- Se omitió el scatter plot de descuento vs profit por complejidad visual excesiva; se mantuvo solo la tabla y el gráfico de punto de quiebre por claridad.
-- Se agregó análisis de product mix effect (margen por categoría por año) para explicar divergencias entre ventas y profit.
-- El notebook se genera con un script Python (`create_eda_notebook.py`) para permitir modificaciones programáticas sin editar JSON manualmente.
 
 ## 5. Dashboard en Power BI
-- Archivo: `superstore.pbix`
+- Archivo: `dashboards/superstore_dashboard.pbix`
 - Fuente de datos: [data/processed/superstore_clean.csv](../data/processed/superstore_clean.csv)
 
 ### Conexión de datos

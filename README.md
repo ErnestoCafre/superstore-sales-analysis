@@ -1,48 +1,121 @@
-# Análisis de Ventas - Superstore (Proyecto End-to-End)
+# Superstore Sales Analysis — End-to-End Data Project
 
+**Análisis completo de ventas de una cadena retail ficticia (EE.UU.): desde la limpieza de datos hasta un dashboard interactivo con hallazgos accionables.**
 
-**Análisis exploratorio, limpieza de datos y dashboard interactivo de ventas de una cadena retail ficticia (EE.UU.).**  
-Herramientas: Python (Pandas, Matplotlib/Seaborn), SQL, Power BI, Google Sheets.
+> Python · SQL · Power BI · Jupyter · Pandas · Matplotlib · Seaborn
 
-## Objetivo del proyecto
-Responder preguntas de negocio clave:  
-- ¿Cómo evolucionaron las ventas y ganancias?  
-- ¿Qué categorías/regiones generan más/menos profit?  
-- ¿Impacto de los descuentos en las pérdidas?  
-- Recomendaciones accionables para mejorar rentabilidad.
+---
+
+## Hallazgos Clave
+
+| Hallazgo | Evidencia | Impacto |
+|----------|-----------|---------|
+| **Descuentos >20% generan pérdidas** | Profit negativo en rangos 21-30% y 31-50%; ~92% de esas transacciones son pérdidas | Establecer tope máximo de descuento al 20% |
+| **Tables y Bookcases son sub-categorías con pérdida neta** | Tables: -$18K, Bookcases: -$3K | Revisar pricing o discontinuar líneas no rentables |
+| **Central + Furniture es la combinación menos rentable** | Único cuadrante negativo en el heatmap región×categoría (-$2,871) | Investigar costos logísticos o proveedores en la región central |
+| **El profit no siempre acompaña a las ventas** | 2015: ventas -2.8% pero profit +24.4% (product mix effect) | La composición de productos importa más que el volumen |
+| **El 18.72% de las transacciones generan pérdidas** | Loss Rate calculado sobre 9,994 transacciones | Casi 1 de cada 5 ventas pierde dinero |
 
 ## Dataset
-- **Fuente:** Kaggle - Superstore Dataset (Vivek468)  
-- **Link:** [Superstore Dataset](https://www.kaggle.com/datasets/vivek468/superstore-dataset-final)  
-- **Fecha de descarga:** Febrero 2026.
 
-## Estructura del proyecto
+- **Fuente:** [Superstore Dataset — Kaggle (Vivek468)](https://www.kaggle.com/datasets/vivek468/superstore-dataset-final)
+- **Dimensiones:** 9,994 filas × 21 columnas
+- **Período:** 2014 – 2017
+- **Métricas totales:** Ventas $2,297,200 · Profit $286,397 · 5,009 órdenes únicas
+
+## Pipeline del Proyecto
+
 ```
+1. Exploración        Google Sheets → Reconocimiento inicial del dataset
+       ↓
+2. ETL (Python)       src/etl.py → Limpieza, tipos, campos calculados
+       ↓
+3. Base de Datos      src/load_db.py + sql/schema.sql → SQLite con schema y vistas
+       ↓
+4. EDA (Jupyter)      notebooks/01_eda.ipynb → Análisis estadístico y visualización
+       ↓
+5. Dashboard          Power BI → 3 páginas interactivas con DAX
+```
+
+## Estructura del Proyecto
+
+```
+superstore-dataset/
+├── dashboards/
+│   └── superstore_dashboard.pbix   ← Dashboard interactivo (Power BI)
 ├── data/
-│   ├── raw/            # Datos originales inmutables
-│   └── processed/      # Datos limpiados para modelado
-├── notebooks/          # Jupyter notebooks (EDA)
-├── sql/                # Scripts SQL (schema, queries)
-├── src/                # Código Python (ETL)
-├── docs/               # Documentación del proceso
-│   └── process.md      # Proceso paso a paso detallado
+│   ├── raw/                        ← Datos originales (inmutables)
+│   │   └── Sample - Superstore.csv
+│   └── processed/                  ← CSV limpio (generado por ETL)
+├── notebooks/
+│   └── 01_eda.ipynb                ← Análisis Exploratorio de Datos
+├── sql/
+│   └── schema.sql                  ← Schema de la base de datos + vistas SQL
+├── src/
+│   ├── etl.py                      ← Pipeline de limpieza y transformación
+│   └── load_db.py                  ← Carga a SQLite
+├── docs/
+│   └── process.md                  ← Documentación paso a paso (5 fases)
 ├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
 
-## Documentación del proceso
-El detalle paso a paso del análisis se encuentra en [`docs/process.md`](docs/process.md).
+## Stack Tecnológico
 
-## Setup
-1. **Crear entorno virtual:**
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # Windows: venv\Scripts\activate
-    pip install -r requirements.txt
-    ```
-2. **Ejecutar ETL:**
-    ```bash
-    python src/etl.py       # Limpia datos → data/processed/
-    python src/load_db.py   # Carga en SQLite → data/superstore.db
-    ```
+| Herramienta | Uso |
+|------------|-----|
+| **Python 3** | ETL, análisis, generación de notebooks |
+| **Pandas / NumPy** | Manipulación y limpieza de datos |
+| **Matplotlib / Seaborn** | Visualizaciones estadísticas |
+| **SQLite** | Almacenamiento estructurado con schema tipado |
+| **Jupyter Notebook** | Análisis exploratorio documentado |
+| **Power BI + DAX** | Dashboard interactivo de 3 páginas |
+| **Google Sheets** | Exploración inicial rápida |
+| **Git** | Control de versiones |
+
+## Dashboard (Power BI)
+
+El dashboard contiene 3 páginas interactivas con slicers de año, región y categoría:
+
+### Page 1 — Sales Overview
+KPIs principales, tendencia temporal, composición por categoría y región.
+
+![Sales Overview](dashboards/imgs/page1_Key-Insights-and-Trends.png)
+
+### Page 2 — Category & Region Profitability
+Profit por sub-categoría (verde/rojo), heatmap región×categoría, análisis por segmento de cliente.
+
+![Category Analysis](dashboards/imgs/page2_Category-and-Region-Profitability.png)
+
+### Page 3 — Discount Impact Analysis
+Punto de quiebre de descuentos, métricas por rango, loss rate por sub-categoría.
+
+![Discount Analysis](dashboards/imgs/page3_Discount-Impact-Analysis.png)
+
+## Reproducir el Proyecto
+
+```bash
+# 1. Clonar el repositorio
+git clone <url>
+cd superstore-dataset
+
+# 2. Crear entorno virtual
+python -m venv venv
+venv\Scripts\activate          # Windows
+# source venv/bin/activate     # Linux/Mac
+
+# 3. Instalar dependencias
+pip install -r requirements.txt
+
+# 4. Ejecutar pipeline
+python src/etl.py              # Limpia datos → data/processed/
+python src/load_db.py           # Carga en SQLite → data/superstore.db
+
+# 5. Abrir notebook EDA
+jupyter notebook notebooks/01_eda.ipynb
+```
+
+## Documentación
+
+El proceso completo, decisiones técnicas y justificaciones se documentan en [`docs/process.md`](docs/process.md).
