@@ -34,10 +34,6 @@ ENV/
 .vscode/
 .idea/
 
-# Power BI
-*.pbix
-*.pbit
-
 # Data (generated)
 *.db
 data/processed/
