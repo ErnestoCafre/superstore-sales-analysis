@@ -10,11 +10,11 @@
 
 | Hallazgo | Evidencia | Impacto |
 |----------|-----------|---------|
-| **Descuentos >20% generan pérdidas** | Profit negativo en rangos 21-30% y 31-50%; ~92% de esas transacciones son pérdidas | Establecer tope máximo de descuento al 20% |
-| **Tables y Bookcases son sub-categorías con pérdida neta** | Tables: -$18K, Bookcases: -$3K | Revisar pricing o discontinuar líneas no rentables |
-| **Central + Furniture es la combinación menos rentable** | Único cuadrante negativo en el heatmap región×categoría (-$2,871) | Investigar costos logísticos o proveedores en la región central |
-| **El profit no siempre acompaña a las ventas** | 2015: ventas -2.8% pero profit +24.4% (product mix effect) | La composición de productos importa más que el volumen |
-| **El 18.72% de las transacciones generan pérdidas** | Loss Rate calculado sobre 9,994 transacciones | Casi 1 de cada 5 ventas pierde dinero |
+| **Descuentos >20% generan pérdidas** | Profit negativo en rangos 21-30% (-$10.369) y 31-50% (-$48.448). El 100%  de la s transacciones con descuento > 50% resultan en pérdida. | Establecer un tope máximo de descuento del20% en las políticas comerciales.|
+| **Tables y Bookcases presentan los mayores índices de pérdida** | Poseen el Loss Rate más alto del catálogo, superando el 0,6 y 0,4 respectivamente. | Revisar estrategias de proecios o evaluar la discontinuación de estas líneas. |
+| **Central + Furniture es la única zona de pérdida regional** | Único cuadrante negativo en la matriz de rentabilidad con una pérdida de -$2.871 | Investigar costos logísticos o cambiar proveedores en la región Central. |
+| **El profit no depende solo del volumen de ventas** | En 2015, las ventas bajaron un 2,8%, pero las ganancias subieron un 24,4% | Priorizar la rentabilidad por producto sobre el volumen bruto de facturación |
+| **Copiers y Technology lideran la generación de beneficios** | Copiers es la subcategoría más rentable con $56K en profit. La categoría Technology ya aporta el 36,4% de las ventas totales. | Reasignar presupuesto de marketing y stock hacia estas categorías de alto margen. |
 
 ## Dataset
 
@@ -67,7 +67,6 @@ superstore-dataset/
 |------------|-----|
 | **Python 3** | ETL, análisis, generación de notebooks |
 | **Pandas / NumPy** | Manipulación y limpieza de datos |
-| **Matplotlib / Seaborn** | Visualizaciones estadísticas |
 | **SQLite** | Almacenamiento estructurado con schema tipado |
 | **Jupyter Notebook** | Análisis exploratorio documentado |
 | **Power BI + DAX** | Dashboard interactivo de 3 páginas |

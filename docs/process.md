@@ -15,12 +15,12 @@
     - Categorías principales: Technology, Furniture, Office Supplies.
     - Cantidad de órdenes únicas sobre order id: 5009
 
-- Total aproximado: Ventas $2,297,200.86 Profit $286,679.34 (calculado rápido en Excel).
+- Total aproximado: Ventas $2,297,200.86 Profit $286,679.34 (calculado rápido en Google Sheets).
 
 
 ## 2. Limpieza y transformación de datos (ETL)
 - Script: [src/etl.py](../src/etl.py)
-- Entrada: [data/raw/Sample - Superstore.csv](../data/raw/Sample%20-%20Superstore.csv) (encoding Windows-1252)
+- Entrada: [data/raw/Sample - Superstore.csv](../data/raw/Sample%20-%20Superstore.csv)
 - Salida: [data/processed/superstore_clean.csv](../data/processed/superstore_clean.csv)
 - Transformaciones realizadas:
     1. Estandarización de nombres de columnas a snake_case.
@@ -50,7 +50,7 @@ Para este proyecto, decidí implementar una base de datos SQLite intermedia (`da
 
 1.  **Integridad de Datos (Type Safety)**:
     - El CSV no fuerza tipos de datos. Una columna de fechas podría contener texto corrupto.
-    - SQLite, a través de `sql/schema.sql`, define tipos explícitos (`REAL` para ventas, `DATE` para fechas). Si bien SQLite es flexible, esta capa actúa como un contrato de calidad.
+    - SQLite, a través de `sql/schema.sql`, define tipos explícitos (`REAL` para ventas, `DATE` para fechas).
 
 2.  **Centralización de la Lógica (Business Logic in Views)**:
     - He creado vistas SQL (`v_sales_by_month`, `v_top_products`) en `sql/schema.sql`.
@@ -71,7 +71,6 @@ El dataset se carga en una única tabla `orders` en lugar de normalizarlo en tab
 
 ## 4. Análisis Exploratorio de Datos (EDA)
 - Notebook: [notebooks/01_eda.ipynb](../notebooks/01_eda.ipynb)
-- Generado programáticamente con `nbformat` para reproducibilidad.
 - Entrada: [data/processed/superstore_clean.csv](../data/processed/superstore_clean.csv)
 
 ### Secciones del análisis
@@ -83,7 +82,7 @@ El dataset se carga en una única tabla `orders` en lugar de normalizarlo en tab
 
 2. **Evolución Temporal**
     - Ventas y profit por año, tendencia mensual, estacionalidad.
-    - Análisis de divergencia ventas-profit: se identificó el *product mix effect* (ej. 2015: ventas -2.8% pero profit +24.4% por mejora en márgenes de Technology).
+    - Análisis de divergencia ventas-profit: en 2015, las ventas bajaron un 2.8%, pero las ganancias subieron un 24.4%. Esto pasó porque se vendieron más productos de la categoría 'Technology', que tienen márgenes de ganancia más altos.
     - Estacionalidad: noviembre y diciembre concentran los picos de ventas.
 
 3. **Rentabilidad por Categoría y Región**
@@ -96,7 +95,7 @@ El dataset se carga en una única tabla `orders` en lugar de normalizarlo en tab
     - Gráfico de punto de quiebre: identificación del umbral donde el profit promedio se vuelve negativo.
 
 5. **Top/Bottom Productos**
-    - 10 productos más y menos rentables (drill-down a nivel micro).
+    - 10 productos más y menos rentables.
 
 6. **Conclusiones y Recomendaciones**
     - Plantilla de hallazgos estructurada: Hallazgo → Evidencia → Recomendación.
